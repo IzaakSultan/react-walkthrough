@@ -93,14 +93,18 @@ export class Walkthrough extends React.Component {
                     onClick={() => {}}
                     style={{
                         position: 'absolute',
-                        backgroundColor: 'white',
                         top: beacon.getIn(['position', 'bottom']) + 12,
                         left: beacon.getIn(['position', 'left']),
-                        borderRadius: 2,
-                        padding: 12
                     }}>
-                    <h3 style={{margin: 0}}>Beacon content here yas</h3>
-                    <p>Beacon content yo</p>
+                    <div style={{width: 0, height: 0, borderStyle: 'solid', borderWidth: '0 15px 20px 15px', borderColor: 'transparent transparent #ffffff transparent'}}></div>
+                    <div style={{
+                        backgroundColor: 'white',
+                        padding: 12,
+                        borderRadius: 2
+                    }}>
+                        <h3 style={{margin: 0}}>Beacon content here yas</h3>
+                        <p>Beacon content yo</p>
+                    </div>
                 </div>
             </div>,
             this._overlay
