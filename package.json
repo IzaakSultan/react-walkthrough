@@ -1,0 +1,20 @@
+{
+  "name": "react-walkthrough",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "storybook": "start-storybook -p 9001"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@kadira/storybook": "^2.3.0"
+  },
+  "dependencies": {
+    "immutable": "^3.8.1",
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1"
+  }
+}
