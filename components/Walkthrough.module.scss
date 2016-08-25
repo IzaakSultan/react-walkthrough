@@ -1,0 +1,48 @@
+@keyframes beacon-outer {
+  0% {
+    transform: scale(1);
+  }
+
+  45% {
+    opacity: 0.7;
+    transform: scale(0.75);
+  }
+
+  100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+}
+
+@keyframes beacon-inner {
+  20% {
+    opacity: 0.9;
+  }
+
+  90% {
+    opacity: 0.7;
+  }
+}
+
+.outerBeacon {
+  position: absolute;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  background-color: rgba(255, 165, 0, 0.4);
+  border: 2px solid rgb(255, 165, 0);
+  cursor: pointer;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: beacon-outer 1.2s infinite ease-in-out;
+}
+
+.innerBeacon {
+  background-color: rgb(255,165,0);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  animation: joyride-beacon-inner 1.2s infinite ease-in-out;
+}

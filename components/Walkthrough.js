@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Immutable from 'immutable';
 
+import style from './Walkthrough.module.scss';
+
 class PortalBeacons extends React.Component {
     render() {
         const {beacons, openBeacon} = this.props;
@@ -14,24 +16,13 @@ class PortalBeacons extends React.Component {
                      return (
                          <div
                             key={ix}
+                            className={style.outerBeacon}
                             style={{
-                                position: 'absolute',
                                 top: beacon.getIn(['position', 'top']),
                                 left: beacon.getIn(['position', 'left']),
-                                borderRadius: '50%',
-                                width: 34,
-                                height: 34,
-                                backgroundColor: 'rgba(255,165,0,0.4)',
-                                border: '2px solid rgb(255,165,0)',
-                                cursor: 'pointer',
-                                pointerEvents: 'auto',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                animation: 'joyride-beacon-outer 1.2s infinite ease-in-out'
                             }}
                             onClick={() => openBeacon(beacon)}>
-                                <div style={{backgroundColor: 'rgb(255,165,0)', width: 18, height: 18, borderRadius: '50%'}}></div>
+                                <div className={style.innerBeacon}></div>
                             </div>
                      );
                  })}
@@ -64,7 +55,9 @@ export class Walkthrough extends React.Component {
 
     addBeacon(beacon) {
         const {beacons} = this.state;
-        this.setState({beacons: beacons.push(beacon)})
+        this.setState(previousState => {
+            return {...previousState, beacons: previousState.beacons.push(beacon)};
+        });
     }
 
     removeBeacon(id) {

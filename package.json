@@ -11,7 +11,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@kadira/storybook": "^2.3.0"
+    "@kadira/storybook": "^2.3.0",
+    "css-loader": "^0.24.0",
+    "node-sass": "^3.8.0",
+    "sass-loader": "^4.0.0",
+    "style-loader": "^0.13.1"
   },
   "dependencies": {
     "immutable": "^3.8.1",
