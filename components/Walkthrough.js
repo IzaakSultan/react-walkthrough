@@ -103,8 +103,9 @@ export class Walkthrough extends React.Component {
                     <div className={style.caret}></div>
                     <div className={style.content}>
                         <h3 style={{margin: 0}}>{beacon.get('title')}</h3>
+                        <div className={style.divider} />
                         <p>{beacon.get('description')}</p>
-                        <button>Done</button>
+                        <button onClick={this.closeBeacon}>Close</button>
                     </div>
                 </div>
             </div>,

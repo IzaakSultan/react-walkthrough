@@ -63,6 +63,7 @@
 
   .infoBox {
     position: absolute;
+    max-width: 400px;
 
     .caret {
       width: 0;
@@ -80,7 +81,33 @@
       border-radius: 2px;
 
       h3 {
-        
+        font-weight: 400;
+        margin: 0;
+      }
+
+      p {
+        font-size: 14px;
+        margin: 0 0 12px;
+        line-height: 1.2;
+      }
+
+      .divider {
+        margin: 10px 0;
+        border-bottom: 1px solid #16498c;
+      }
+
+      button {
+        color: #fff;
+        border-radius: 4px;
+        padding: 6px 10px;
+        border: 1px solid #164487;
+        background-color: #16498c;
+        outline: none;
+
+        &:hover {
+          cursor: pointer;
+          background-color: #164487;
+        }
       }
     }
   }
