@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Immutable from 'immutable';
+import Guid from 'guid';
 
 import style from './Walkthrough.module.scss';
 
@@ -17,13 +18,10 @@ class PortalBeacons extends React.Component {
                          <div
                             key={ix}
                             className={style.outerBeacon}
-                            style={{
-                                top: beacon.getIn(['position', 'top']),
-                                left: beacon.getIn(['position', 'left']),
-                            }}
+                            style={{top: beacon.getIn(['position', 'top']), left: beacon.getIn(['position', 'left'])}}
                             onClick={() => openBeacon(beacon)}>
                                 <div className={style.innerBeacon}></div>
-                            </div>
+                        </div>
                      );
                  })}
             </div>
@@ -34,80 +32,99 @@ class PortalBeacons extends React.Component {
 
 export class Walkthrough extends React.Component {
     static childContextTypes = {
-        addBeacon: React.PropTypes.func
+        addBeacon: React.PropTypes.func,
+        updateBeacon: React.PropTypes.func,
+        removeBeacon: React.PropTypes.func
     };
 
     state = {
         beacons: Immutable.List.of(),
-        openBeacon: false
+        openBeacon: false,
+        seen: Immutable.Set.of()
     };
 
     constructor(props) {
         super(props);
-        this.addBeacon = this.addBeacon.bind(this);
-        this.openBeacon = this.openBeacon.bind(this);
+
         this.closeBeacon = this.closeBeacon.bind(this);
     }
 
     getChildContext() {
-        return {addBeacon: this.addBeacon,};
+        return {
+            addBeacon: this.addBeacon,
+            updateBeacon: this.updateBeacon,
+            removeBeacon: this.removeBeacon
+        };
     }
 
-    addBeacon(beacon) {
-        const {beacons} = this.state;
+    addBeacon = (beacon) => {
         this.setState(previousState => {
             return {...previousState, beacons: previousState.beacons.push(beacon)};
         });
-    }
+    };
 
-    removeBeacon(id) {
+    updateBeacon = (beacon) => {
+        this.setState(previousState => {
+            return {
+                ...previousState,
+                beacons: previousState.beacons.map(previousBeacon => (
+                    previousBeacon.get('id') === beacon.get('id') ? beacon : previousBeacon
+                ))
+            }
+        });
+    };
 
-    }
+    removeBeacon = (id) => {
+        this.setState(previousState => {
+            return {...previousState, beacons: previousState.beacons.filter(beacon => beacon.get('id') !== id)}
+        });
+    };
 
-    openBeacon(beacon) {
-        this.setState({openBeacon: true});
+    openBeacon = (beacon) => {
+        const {seen} = this.state;
+
+        this.setState({openBeacon: true, seen: seen.add(beacon.get('id'))});
 
         ReactDOM.render(
-            <div style={{position: 'absolute', top: 0, left: 0, bottom: 0, right: 0, cursor: 'pointer'}} onClick={this.closeBeacon}>
-                <div
-                onClick={() => {}}
-                    style={{
-                        position: 'absolute',
-                        top: beacon.getIn(['position', 'top']) - 4,
-                        left: beacon.getIn(['position', 'left']) - 4,
-                        width: beacon.getIn(['position', 'width']) + 8,
-                        height: beacon.getIn(['position', 'height']) + 8,
-                        borderRadius: 4,
-                        boxShadow: '0 0 0 9999px rgba(0,0,0,0.5),0 0 15px rgba(0,0,0,0.5)',
-                        cursor: 'auto'
-                    }}>
+            <div className={style.overlay}>
+                <div style={{position: 'fixed', width: '100%', height: '100%', cursor: 'pointer'}} onClick={this.closeBeacon}>
+
                 </div>
                 <div
-                    onClick={() => {}}
+                    className={style.highlight}
                     style={{
-                        position: 'absolute',
-                        top: beacon.getIn(['position', 'bottom']) + 12,
-                        left: beacon.getIn(['position', 'left']),
+                        top: beacon.getIn(['position', 'top']) - 6,
+                        left: beacon.getIn(['position', 'left']) - 6,
+                        width: beacon.getIn(['position', 'width']) + 12,
+                        height: beacon.getIn(['position', 'height']) + 12
                     }}>
-                    <div style={{width: 0, height: 0, borderStyle: 'solid', borderWidth: '0 15px 20px 15px', borderColor: 'transparent transparent #ffffff transparent'}}></div>
-                    <div style={{
-                        backgroundColor: 'white',
-                        padding: 12,
-                        borderRadius: 2
-                    }}>
-                        <h3 style={{margin: 0}}>Beacon content here yas</h3>
-                        <p>Beacon content yo</p>
+                </div>
+                <div className={style.infoBox} style={{top: beacon.getIn(['position', 'bottom']) + 12, left: beacon.getIn(['position', 'left'])}}>
+                    <div className={style.caret}></div>
+                    <div className={style.content}>
+                        <h3 style={{margin: 0}}>{beacon.get('title')}</h3>
+                        <p>{beacon.get('description')}</p>
+                        <button>Done</button>
                     </div>
                 </div>
             </div>,
             this._overlay
         );
-    }
+    };
 
-    closeBeacon() {
+    closeBeacon = () => {
         this.setState({openBeacon: false});
         ReactDOM.unmountComponentAtNode(this._overlay);
-    }
+    };
+
+    renderBeacons = () => {
+        const {beacons, seen} = this.state;
+
+        ReactDOM.render(
+            <PortalBeacons beacons={beacons.filter(beacon => !seen.includes(beacon.get('id')) && beacon.get('requires').every(requirement => seen.includes(requirement)))} openBeacon={this.openBeacon} />,
+            this._beacons
+        );
+    };
 
     componentWillMount() {
         this._beacons = document.createElement('div');
@@ -117,28 +134,23 @@ export class Walkthrough extends React.Component {
         document.body.appendChild(this._overlay);
 
         this.renderBeacons();
+
+        window.addEventListener('resize', this.renderBeacons);
     }
 
     componentWillUnmount() {
         const {openBeacon} = this.state;
 
+        window.removeEventListener('resize', this.renderBeacons);
+
         ReactDOM.unmountComponentAtNode(this._beacons);
         if (openBeacon) ReactDOM.unmountComponentAtNode(this._overlay);
-        doument.body.removeChild(this._beacons);
-        doument.body.removeChild(this._overlay);
+        document.body.removeChild(this._beacons);
+        document.body.removeChild(this._overlay);
     }
 
     componentDidUpdate(prevProps, prevState) {
         this.renderBeacons();
-    }
-
-    renderBeacons() {
-        const {beacons} = this.state;
-
-        ReactDOM.render(
-            <PortalBeacons beacons={beacons} openBeacon={this.openBeacon} />,
-            this._beacons
-        );
     }
 
     render() {
@@ -146,38 +158,62 @@ export class Walkthrough extends React.Component {
     }
 }
 
-
-// The sole purpose of this element is to define the region that highlights when the beacon is clicked
 export class Beacon extends React.Component {
     static contextTypes = {
         addBeacon: React.PropTypes.func,
-        openBeacon: React.PropTypes.func
+        updateBeacon: React.PropTypes.func,
+        removeBeacon: React.PropTypes.func
     };
 
-    state = {
-        active: false
+    static propTypes = {
+        id: React.PropTypes.any,
+        requires: React.PropTypes.arrayOf(React.PropTypes.any),
+        if: React.PropTypes.bool,
+        title: React.PropTypes.string,
+        description: React.PropTypes.string
+    };
+
+    static defaultProps = {
+        id: Guid.raw(),
+        requires: [],
+        if: true
+    };
+
+    asMap = props => {
+        const {id, title, description, requires, if: condition} = props;
+        const {top, left, bottom, right, width, height} = ReactDOM.findDOMNode(this).getBoundingClientRect();
+
+        return (
+            Immutable.fromJS({
+                position: {top, left, bottom, right, width, height},
+                id,
+                title,
+                description,
+                requires,
+                condition
+            })
+        );
     };
 
     componentDidMount() {
         const {addBeacon} = this.context;
+        addBeacon(this.asMap(this.props));
+    }
 
-        const boundingRect = ReactDOM.findDOMNode(this).getBoundingClientRect();
+    shouldComponentUpdate(nextProps, nextState) {
+        return !this.asMap(this.props).equals(this.asMap(nextProps));
+    }
 
-        addBeacon(Immutable.fromJS({
-            position: {
-                top: boundingRect.top,
-                left: boundingRect.left,
-                bottom: boundingRect.bottom,
-                right: boundingRect.right,
-                width: boundingRect.width,
-                height: boundingRect.height,
-            }
-        }));
-        // TODO register beacon with walkthrough
+    componentDidUpdate() {
+        const {updateBeacon} = this.context;
+        updateBeacon(this.asMap(this.props));
     }
 
     componentWillUnmount() {
-        // TODO unregister beacon with walkthrough
+        const {removeBeacon} = this.context;
+        const {id} = this.props;
+
+        removeBeacon(id);
     }
 
     render() {

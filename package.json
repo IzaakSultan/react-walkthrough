@@ -19,6 +19,7 @@
     "style-loader": "^0.13.1"
   },
   "dependencies": {
+    "guid": "0.0.12",
     "immutable": "^3.8.1",
     "react": "^15.3.1",
     "react-dom": "^15.3.1"
