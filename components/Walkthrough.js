@@ -121,7 +121,15 @@ export class Walkthrough extends React.Component {
         const {beacons, seen} = this.state;
 
         ReactDOM.render(
-            <PortalBeacons beacons={beacons.filter(beacon => !seen.includes(beacon.get('id')) && beacon.get('requires').every(requirement => seen.includes(requirement)))} openBeacon={this.openBeacon} />,
+            <PortalBeacons
+                beacons={beacons.filter(beacon => {
+                    return (
+                        beacon.get('condition') &&
+                        !seen.includes(beacon.get('id')) &&
+                        beacon.get('requires').every(requirement => seen.includes(requirement))
+                    );
+                })}
+                openBeacon={this.openBeacon} />,
             this._beacons
         );
     };
