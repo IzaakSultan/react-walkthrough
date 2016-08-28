@@ -1,8 +1,9 @@
 {
   "name": "react-walkthrough",
   "version": "1.0.0",
-  "description": "",
+  "description": "Simple declarative user walkthroughs and onboarding with React",
   "main": "lib/index.js",
+  "repository": "izaaksultan/react-walkthrough",
   "scripts": {
     "test": "jest --no-cache --coverage",
     "storybook": "start-storybook -p 9001",
@@ -42,7 +43,7 @@
     "sass-loader": "^4.0.0",
     "style-loader": "^0.13.1"
   },
-  "dependencies": {
+  "peerDependencies": {
     "guid": "0.0.12",
     "immutable": "^3.8.1",
     "react": "^15.3.1",
