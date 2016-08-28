@@ -1,4 +1,5 @@
 # react-walkthrough
+
 [![Build Status](https://travis-ci.org/IzaakSultan/react-walkthrough.svg?branch=master)](https://travis-ci.org/IzaakSultan/react-walkthrough)
 [![Coverage Status](https://coveralls.io/repos/github/IzaakSultan/react-walkthrough/badge.svg?branch=master)](https://coveralls.io/github/IzaakSultan/react-walkthrough?branch=master)
 
