@@ -1,0 +1,6 @@
+src
+.storybook
+.coveralls.yml
+.travis.yml
+coverage
+jest

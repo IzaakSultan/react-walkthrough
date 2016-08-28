@@ -5,7 +5,8 @@ import Guid from 'guid';
 
 import style from './Walkthrough.module.scss';
 
-class PortalBeacons extends React.Component {
+
+class BeaconPortal extends React.Component {
     render() {
         const {beacons, openBeacon} = this.props;
 
@@ -30,15 +31,20 @@ class PortalBeacons extends React.Component {
 }
 
 
-export class Walkthrough extends React.Component {
+export default class Walkthrough extends React.Component {
     static childContextTypes = {
         addBeacon: React.PropTypes.func,
         updateBeacon: React.PropTypes.func,
-        removeBeacon: React.PropTypes.func
+        removeBeacon: React.PropTypes.func,
+
+        addModal: React.PropTypes.func,
+        updateModal: React.PropTypes.func,
+        removeModal: React.PropTypes.func
     };
 
     state = {
         beacons: Immutable.List.of(),
+        modals: Immutable.List.of(),
         openBeacon: false,
         seen: Immutable.Set.of()
     };
@@ -53,7 +59,11 @@ export class Walkthrough extends React.Component {
         return {
             addBeacon: this.addBeacon,
             updateBeacon: this.updateBeacon,
-            removeBeacon: this.removeBeacon
+            removeBeacon: this.removeBeacon,
+
+            addModal: this.addModal,
+            updateModal: this.updateModal,
+            removeModal: this.removeModal
         };
     }
 
@@ -70,7 +80,7 @@ export class Walkthrough extends React.Component {
                 beacons: previousState.beacons.map(previousBeacon => (
                     previousBeacon.get('id') === beacon.get('id') ? beacon : previousBeacon
                 ))
-            }
+            };
         });
     };
 
@@ -78,6 +88,29 @@ export class Walkthrough extends React.Component {
         this.setState(previousState => {
             return {...previousState, beacons: previousState.beacons.filter(beacon => beacon.get('id') !== id)}
         });
+    };
+
+    addModal = (modal) => {
+        this.setState(previousState => {
+            return {...previousState, modals: previousState.modals.push(modal)}
+        });
+    };
+
+    updateModal = (modal) => {
+        this.setState(previousState => (
+            {
+                ...previousState,
+                modals: previousState.modals.map(previousModal => (
+                    perviousModal.get('id') === modal.get('id') ? modal : previousModal
+                ))
+            }
+        ));
+    };
+
+    removeModal = (id) => {
+        this.setState(previousState => (
+            {...previousState, modals: previousState.modals.filter(modal => modal.get('id') !== id)}
+        ));
     };
 
     openBeacon = (beacon) => {
@@ -122,14 +155,12 @@ export class Walkthrough extends React.Component {
         const {beacons, seen} = this.state;
 
         ReactDOM.render(
-            <PortalBeacons
-                beacons={beacons.filter(beacon => {
-                    return (
-                        beacon.get('condition') &&
-                        !seen.includes(beacon.get('id')) &&
-                        beacon.get('requires').every(requirement => seen.includes(requirement))
-                    );
-                })}
+            <BeaconPortal
+                beacons={beacons.filter(beacon => (
+                    beacon.get('condition') &&
+                    !seen.includes(beacon.get('id')) &&
+                    beacon.get('requires').every(requirement => seen.includes(requirement))
+                ))}
                 openBeacon={this.openBeacon} />,
             this._beacons
         );
@@ -137,10 +168,16 @@ export class Walkthrough extends React.Component {
 
     componentWillMount() {
         this._beacons = document.createElement('div');
+        this._beacons.className = 'react-walkthrough-beacons';
         document.body.appendChild(this._beacons);
 
         this._overlay = document.createElement('div');
+        this._overlay.className = 'react-walkthrough-overlay';
         document.body.appendChild(this._overlay);
+
+        this._modals = document.createElement('div');
+        this._modals.className = 'react-walkthrough-modals';
+        document.body.appendChild(this._modals);
 
         this.renderBeacons();
 
@@ -156,73 +193,11 @@ export class Walkthrough extends React.Component {
         if (openBeacon) ReactDOM.unmountComponentAtNode(this._overlay);
         document.body.removeChild(this._beacons);
         document.body.removeChild(this._overlay);
+        document.body.removeChild(this._modals);
     }
 
     componentDidUpdate(prevProps, prevState) {
         this.renderBeacons();
-    }
-
-    render() {
-        return React.Children.only(this.props.children);
-    }
-}
-
-export class Beacon extends React.Component {
-    static contextTypes = {
-        addBeacon: React.PropTypes.func,
-        updateBeacon: React.PropTypes.func,
-        removeBeacon: React.PropTypes.func
-    };
-
-    static propTypes = {
-        id: React.PropTypes.any,
-        requires: React.PropTypes.arrayOf(React.PropTypes.any),
-        if: React.PropTypes.bool,
-        title: React.PropTypes.string,
-        description: React.PropTypes.string
-    };
-
-    static defaultProps = {
-        id: Guid.raw(),
-        requires: [],
-        if: true
-    };
-
-    asMap = props => {
-        const {id, title, description, requires, if: condition} = props;
-        const {top, left, bottom, right, width, height} = ReactDOM.findDOMNode(this).getBoundingClientRect();
-
-        return (
-            Immutable.fromJS({
-                position: {top, left, bottom, right, width, height},
-                id,
-                title,
-                description,
-                requires,
-                condition
-            })
-        );
-    };
-
-    componentDidMount() {
-        const {addBeacon} = this.context;
-        addBeacon(this.asMap(this.props));
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return !this.asMap(this.props).equals(this.asMap(nextProps));
-    }
-
-    componentDidUpdate() {
-        const {updateBeacon} = this.context;
-        updateBeacon(this.asMap(this.props));
-    }
-
-    componentWillUnmount() {
-        const {removeBeacon} = this.context;
-        const {id} = this.props;
-
-        removeBeacon(id);
     }
 
     render() {
