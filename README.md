@@ -24,6 +24,9 @@ class Example extends React.Component {
                     <Beacon id="first-button" title="The first button" description="This is the first button">
                         <button>First Button</button>
                     </Beacon>
+                    <Beacon id="second-button" requires={['first-button']} title="The second button" description="This is the second button">
+                        <button>Second Button</button>
+                    </Beacon>
                 </div>
             </Walkthrough>
         )
