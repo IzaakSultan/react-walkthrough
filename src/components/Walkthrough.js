@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Immutable from 'immutable';
-import Guid from 'guid';
 
 import style from './Walkthrough.module.scss';
 

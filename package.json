@@ -7,7 +7,7 @@
   "scripts": {
     "test": "jest --no-cache --coverage",
     "storybook": "start-storybook -p 9001",
-    "build": "babel src -d lib",
+    "build": "webpack --config webpack.config.js --progress --colors",
     "build-storybook": "build-storybook",
     "deploy-gh-pages": "build-storybook && git checkout gh-pages && rm -rf static && mv ./storybook-static/* ."
   },
@@ -30,21 +30,29 @@
     "@kadira/storybook": "^2.3.0",
     "babel-cli": "^6.14.0",
     "babel-jest": "^14.1.0",
+    "babel-loader": "^6.2.5",
     "babel-preset-latest": "^6.14.0",
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "^6.5.0",
     "coveralls": "^2.11.12",
     "css-loader": "^0.24.0",
     "enzyme": "^2.4.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "immutable": "^3.8.1",
     "jest-cli": "^14.1.0",
     "jsdom": "^9.4.2",
     "node-sass": "^3.8.0",
+    "react": "^15.3.1",
     "react-addons-test-utils": "^15.3.1",
+    "react-dom": "^15.3.1",
     "sass-loader": "^4.0.0",
-    "style-loader": "^0.13.1"
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.2"
+  },
+  "dependencies": {
+    "guid": "0.0.12"
   },
   "peerDependencies": {
-    "guid": "0.0.12",
     "immutable": "^3.8.1",
     "react": "^15.3.1",
     "react-dom": "^15.3.1"
