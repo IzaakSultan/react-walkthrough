@@ -1,6 +1,10 @@
 src
+.babelrc
 .storybook
 .coveralls.yml
 .travis.yml
 coverage
 jest
+storybook-static
+node_modules
+webpack.config.js
