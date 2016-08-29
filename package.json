@@ -1,6 +1,6 @@
 {
   "name": "react-walkthrough",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Simple declarative user walkthroughs and onboarding with React",
   "main": "lib/index.js",
   "repository": "izaaksultan/react-walkthrough",

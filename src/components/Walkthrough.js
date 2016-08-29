@@ -14,11 +14,13 @@ class BeaconPortal extends React.Component {
         return (
             <div style={{position: 'absolute', width: '100%', height: '100%', left: 0, top: 0, pointerEvents: 'none'}}>
                  {beacons.map((beacon, ix) => {
+                     const position = beacon.get('measure')();
+
                      return (
                          <div
                             key={ix}
                             className={style.outerBeacon}
-                            style={{top: beacon.getIn(['position', 'top']), left: beacon.getIn(['position', 'left'])}}
+                            style={{top: position.get('top'), left: position.get('left')}}
                             onClick={() => openBeacon(beacon)}>
                                 <div className={style.innerBeacon}></div>
                         </div>
@@ -36,9 +38,9 @@ export default class Walkthrough extends React.Component {
         updateBeacon: React.PropTypes.func,
         removeBeacon: React.PropTypes.func,
 
-        addModal: React.PropTypes.func,
-        updateModal: React.PropTypes.func,
-        removeModal: React.PropTypes.func
+        // addModal: React.PropTypes.func,
+        // updateModal: React.PropTypes.func,
+        // removeModal: React.PropTypes.func
     };
 
     state = {
@@ -60,9 +62,9 @@ export default class Walkthrough extends React.Component {
             updateBeacon: this.updateBeacon,
             removeBeacon: this.removeBeacon,
 
-            addModal: this.addModal,
-            updateModal: this.updateModal,
-            removeModal: this.removeModal
+            // addModal: this.addModal,
+            // updateModal: this.updateModal,
+            // removeModal: this.removeModal
         };
     }
 
@@ -117,21 +119,22 @@ export default class Walkthrough extends React.Component {
 
         this.setState({openBeacon: true, seen: seen.add(beacon.get('id'))});
 
+        const position = beacon.get('measure')();
+
         ReactDOM.render(
             <div className={style.overlay}>
                 <div style={{position: 'fixed', width: '100%', height: '100%', cursor: 'pointer'}} onClick={this.closeBeacon}>
-
                 </div>
                 <div
                     className={style.highlight}
                     style={{
-                        top: beacon.getIn(['position', 'top']) - 6,
-                        left: beacon.getIn(['position', 'left']) - 6,
-                        width: beacon.getIn(['position', 'width']) + 12,
-                        height: beacon.getIn(['position', 'height']) + 12
+                        top: position.get('top') - 6,
+                        left: position.get('left') - 6,
+                        width: position.get('width') + 12,
+                        height: position.get('height') + 12
                     }}>
                 </div>
-                <div className={style.infoBox} style={{top: beacon.getIn(['position', 'bottom']) + 12, left: beacon.getIn(['position', 'left'])}}>
+                <div className={style.infoBox} style={{top: position.get('bottom') + 12, left: position.get('left')}}>
                     <div className={style.caret}></div>
                     <div className={style.content}>
                         <h3 style={{margin: 0}}>{beacon.get('title')}</h3>
@@ -174,9 +177,9 @@ export default class Walkthrough extends React.Component {
         this._overlay.className = 'react-walkthrough-overlay';
         document.body.appendChild(this._overlay);
 
-        this._modals = document.createElement('div');
-        this._modals.className = 'react-walkthrough-modals';
-        document.body.appendChild(this._modals);
+        // this._modals = document.createElement('div');
+        // this._modals.className = 'react-walkthrough-modals';
+        // document.body.appendChild(this._modals);
 
         this.renderBeacons();
 
@@ -192,7 +195,7 @@ export default class Walkthrough extends React.Component {
         if (openBeacon) ReactDOM.unmountComponentAtNode(this._overlay);
         document.body.removeChild(this._beacons);
         document.body.removeChild(this._overlay);
-        document.body.removeChild(this._modals);
+        // document.body.removeChild(this._modals);
     }
 
     componentDidUpdate(prevProps, prevState) {

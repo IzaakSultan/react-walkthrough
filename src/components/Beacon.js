@@ -24,18 +24,32 @@ export default class Beacon extends React.Component {
         if: true
     };
 
-    asMap = props => {
-        const {id, title, description, requires, if: condition} = props;
+    measure = () => {
         const {top, left, bottom, right, width, height} = ReactDOM.findDOMNode(this).getBoundingClientRect();
 
         return (
             Immutable.fromJS({
-                position: {top, left, bottom, right, width, height},
+                top: top + window.scrollY,
+                left: left + window.scrollX,
+                bottom: bottom + window.scrollY,
+                right: right +  window.scrollX,
+                width,
+                height
+            })
+        );
+    };
+
+    asMap = props => {
+        const {id, title, description, requires, if: condition} = props;
+
+        return (
+            Immutable.fromJS({
                 id,
                 title,
                 description,
                 requires,
-                condition
+                condition,
+                measure: this.measure
             })
         );
     };
@@ -45,13 +59,12 @@ export default class Beacon extends React.Component {
         addBeacon(this.asMap(this.props));
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return !this.asMap(this.props).equals(this.asMap(nextProps));
-    }
-
-    componentDidUpdate() {
+    componentDidUpdate(prevProps, prevState) {
         const {updateBeacon} = this.context;
-        updateBeacon(this.asMap(this.props));
+
+        if (!this.asMap(this.props).equals(this.asMap(prevProps))) {
+            updateBeacon(this.asMap(this.props));
+        }
     }
 
     componentWillUnmount() {
