@@ -8,3 +8,4 @@ jest
 storybook-static
 node_modules
 webpack.config.js
+.idea
