@@ -47,6 +47,7 @@ export default class Walkthrough extends React.Component {
         beacons: Immutable.List.of(),
         modals: Immutable.List.of(),
         openBeacon: false,
+        current: '',
         seen: Immutable.Set.of()
     };
 
@@ -117,7 +118,7 @@ export default class Walkthrough extends React.Component {
     openBeacon = (beacon) => {
         const {seen} = this.state;
 
-        this.setState({openBeacon: true, seen: seen.add(beacon.get('id'))});
+        this.setState({openBeacon: true, current: beacon.get('id')});
 
         const position = beacon.get('measure')();
 
@@ -128,10 +129,10 @@ export default class Walkthrough extends React.Component {
                 <div
                     className={style.highlight}
                     style={{
-                        top: position.get('top') - 6,
-                        left: position.get('left') - 6,
-                        width: position.get('width') + 12,
-                        height: position.get('height') + 12
+                        top: position.get('top') - 2,
+                        left: position.get('left') - 2,
+                        width: position.get('width') + 4,
+                        height: position.get('height') + 4
                     }}>
                 </div>
                 <div className={style.infoBox} style={{top: position.get('bottom') + 12, left: position.get('left')}}>
@@ -149,19 +150,20 @@ export default class Walkthrough extends React.Component {
     };
 
     closeBeacon = () => {
-        this.setState({openBeacon: false});
+        this.setState({openBeacon: false, current: '', seen: this.state.seen.add(this.state.current)});
         ReactDOM.unmountComponentAtNode(this._overlay);
     };
 
     renderBeacons = () => {
-        const {beacons, seen} = this.state;
+        const {beacons, seen, current} = this.state;
 
         ReactDOM.render(
             <BeaconPortal
                 beacons={beacons.filter(beacon => (
                     beacon.get('condition') &&
                     !seen.includes(beacon.get('id')) &&
-                    beacon.get('requires').every(requirement => seen.includes(requirement))
+                    beacon.get('requires').every(requirement => seen.includes(requirement)) &&
+                    current !== beacon.get('id')
                 ))}
                 openBeacon={this.openBeacon} />,
             this._beacons
