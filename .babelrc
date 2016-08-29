@@ -1,3 +1,4 @@
 {
+    "plugins": ["transform-remove-console"],
     "presets": ["react", "latest", "stage-0"]
 }

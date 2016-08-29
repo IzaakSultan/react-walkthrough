@@ -9,8 +9,6 @@ class BeaconPortal extends React.Component {
     render() {
         const {beacons, openBeacon} = this.props;
 
-        console.log('beacons ', beacons.toJS());
-
         return (
             <div style={{position: 'absolute', width: '100%', height: '100%', left: 0, top: 0, pointerEvents: 'none'}}>
                  {beacons.map((beacon, ix) => {
