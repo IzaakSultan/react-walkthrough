@@ -1,6 +1,5 @@
 {
     "plugins": [
-        "transform-remove-console",
         "@babel/plugin-proposal-class-properties"
     ],
     "presets": [

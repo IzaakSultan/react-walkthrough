@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Guid from 'guid';
 import Immutable from 'immutable';
 import PropTypes from 'prop-types';
