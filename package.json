@@ -16,13 +16,15 @@
       "<rootDir>/node_modules/react",
       "<rootDir>/node_modules/react-dom",
       "<rootDir>/node_modules/react-addons-test-utils",
+      "<rootDir>/node_modules/react-test-renderer",
       "<rootDir>/node_modules/enzyme",
       "<rootDir>/node_modules/immutable",
       "<rootDir>/node_modules/jsdom"
     ],
     "moduleNameMapper": {
       "^.*[.](scss|SCSS|css|CSS)$": "<rootDir>/jest/CSSModule.js"
-    }
+    },
+    "setupTestFrameworkScriptFile": "<rootDir>/enzyme.setup.js"
   },
   "author": "Izaak Sultan",
   "license": "ISC",
@@ -37,15 +39,16 @@
     "babel-preset-stage-0": "^6.5.0",
     "coveralls": "^2.11.12",
     "css-loader": "^0.24.0",
-    "enzyme": "^2.4.1",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-15": "^1.4.1",
     "extract-text-webpack-plugin": "^1.0.1",
     "immutable": "^3.8.1",
     "jest-cli": "^14.1.0",
     "jsdom": "^16.0.0",
     "node-sass": "^4.0.0",
     "react": "^15.3.1",
-    "react-addons-test-utils": "^15.3.1",
     "react-dom": "^15.3.1",
+    "react-test-renderer": "^15.6.2",
     "sass-loader": "^4.0.0",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.2"
