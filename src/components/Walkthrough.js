@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Immutable from 'immutable';
+import PropTypes from 'prop-types';
 
 import style from './Walkthrough.module.scss';
 
@@ -32,13 +33,13 @@ class BeaconPortal extends React.Component {
 
 export default class Walkthrough extends React.Component {
     static childContextTypes = {
-        addBeacon: React.PropTypes.func,
-        updateBeacon: React.PropTypes.func,
-        removeBeacon: React.PropTypes.func,
+        addBeacon: PropTypes.func,
+        updateBeacon: PropTypes.func,
+        removeBeacon: PropTypes.func,
 
-        // addModal: React.PropTypes.func,
-        // updateModal: React.PropTypes.func,
-        // removeModal: React.PropTypes.func
+        // addModal: PropTypes.func,
+        // updateModal: PropTypes.func,
+        // removeModal: PropTypes.func
     };
 
     state = {

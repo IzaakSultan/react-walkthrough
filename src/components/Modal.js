@@ -2,18 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Guid from 'guid';
 import Immutable from 'immutable';
+import PropTypes from 'prop-types';
 
 export default class Modal extends React.Component {
     static contextTypes = {
-        addModal: React.PropTypes.func,
-        updateModal: React.PropTypes.func,
-        removeModal: React.PropTypes.func
+        addModal: PropTypes.func,
+        updateModal: PropTypes.func,
+        removeModal: PropTypes.func
     };
 
     static propTypes = {
-        id: React.PropTypes.any,
-        requires: React.PropTypes.arrayOf(React.PropTypes.any),
-        if: React.PropTypes.bool
+        id: PropTypes.any,
+        requires: PropTypes.arrayOf(PropTypes.any),
+        if: PropTypes.bool
     };
 
     static defaultProps = {

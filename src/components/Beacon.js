@@ -2,20 +2,21 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Guid from 'guid';
 import Immutable from 'immutable';
+import PropTypes from 'prop-types';
 
 export default class Beacon extends React.Component {
     static contextTypes = {
-        addBeacon: React.PropTypes.func,
-        updateBeacon: React.PropTypes.func,
-        removeBeacon: React.PropTypes.func
+        addBeacon: PropTypes.func,
+        updateBeacon: PropTypes.func,
+        removeBeacon: PropTypes.func
     };
 
     static propTypes = {
-        id: React.PropTypes.any,
-        requires: React.PropTypes.arrayOf(React.PropTypes.any),
-        if: React.PropTypes.bool,
-        title: React.PropTypes.string,
-        description: React.PropTypes.string
+        id: PropTypes.any,
+        requires: PropTypes.arrayOf(PropTypes.any),
+        if: PropTypes.bool,
+        title: PropTypes.string,
+        description: PropTypes.string
     };
 
     static defaultProps = {
