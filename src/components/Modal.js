@@ -37,7 +37,9 @@ export default class Modal extends React.Component {
     componentDidMount() {
         const {children} = this.props;
         const {addModal} = this.context;
-        addModal(this.asMap(this.props), children);
+        if (addModal) {
+            addModal(this.asMap(this.props), children);
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -47,14 +49,18 @@ export default class Modal extends React.Component {
     componentDidUpdate() {
         const {children} = this.props;
         const {updateBeacon} = this.context;
-        updateBeacon(this.asMap(this.props), children);
+        if (updateBeacon) {
+            updateBeacon(this.asMap(this.props), children);
+        }
     }
 
     componentWillUnmount() {
         const {removeModal} = this.context;
         const {id} = this.props;
 
-        removeModal(id);
+        if (removeModal) {
+            removeModal(id);
+        }
     }
 
     render() {
