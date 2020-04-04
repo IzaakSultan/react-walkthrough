@@ -42,7 +42,7 @@
     "immutable": "^3.8.1",
     "jest-cli": "^14.1.0",
     "jsdom": "^9.4.2",
-    "node-sass": "^3.8.0",
+    "node-sass": "^4.0.0",
     "react": "^15.3.1",
     "react-addons-test-utils": "^15.3.1",
     "react-dom": "^15.3.1",
