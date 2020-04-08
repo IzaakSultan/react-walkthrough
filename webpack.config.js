@@ -1,6 +1,8 @@
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const path = require('path');
 
 module.exports = {
+    mode: 'development',
     entry: {
         'react-walkthrough': './src/index.js'
     },
@@ -9,25 +11,44 @@ module.exports = {
     ],
     output: {
         filename: 'index.js',
-        path: 'lib',
+        path: path.resolve(__dirname, 'lib'),
         publicPath: '/',
         libraryTarget: 'umd',
         library: 'ReactWalkthrough'
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /.js$/,
                 exclude: /node_modules/,
-                loader: 'babel'
+                use: [
+                    'babel-loader'
+                ]
             },
             {
                 test: /\.scss$/,
-                loader: ExtractTextPlugin.extract('style-loader', 'css-loader?modules&importLoaders=1&localIdentName=[local]-[hash:base64:4]!sass-loader')
+                use: [
+                    { loader: MiniCssExtractPlugin.loader },
+                    // 'style-loader',
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            importLoaders: 1,
+                            modules: {
+                                localIdentName: '[local]-[hash:base64:4]',
+                            }
+                        },
+                    },
+                    'sass-loader',
+                ]
             }
         ]
     },
     plugins: [
-        new ExtractTextPlugin('style.css', {allChunks: true})
+        new MiniCssExtractPlugin({
+            // Options similar to the same options in webpackOptions.output
+            // both options are optional
+            filename: 'style.css',
+        }),
     ]
 };

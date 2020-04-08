@@ -4,13 +4,13 @@ jest.unmock('../Walkthrough.js');
 
 import React from 'react';
 import {mount} from 'enzyme';
-import jsdom from 'jsdom';
+import {JSDOM} from 'jsdom';
 
 import Walkthrough from '../Walkthrough';
 
 describe('Walkthrough', () => {
     beforeEach(() => {
-        global.document = jsdom.jsdom('<!doctype html><html><body></body></html>');
+        global.document = new JSDOM('<!doctype html><html><body></body></html>');
         global.window = document.defaultView;
         global.navigator = { userAgent: 'node.js' };
     });

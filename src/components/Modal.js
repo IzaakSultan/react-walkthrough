@@ -1,19 +1,19 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Guid from 'guid';
 import Immutable from 'immutable';
+import PropTypes from 'prop-types';
 
 export default class Modal extends React.Component {
     static contextTypes = {
-        addModal: React.PropTypes.func,
-        updateModal: React.PropTypes.func,
-        removeModal: React.PropTypes.func
+        addModal: PropTypes.func,
+        updateModal: PropTypes.func,
+        removeModal: PropTypes.func
     };
 
     static propTypes = {
-        id: React.PropTypes.any,
-        requires: React.PropTypes.arrayOf(React.PropTypes.any),
-        if: React.PropTypes.bool
+        id: PropTypes.any,
+        requires: PropTypes.arrayOf(PropTypes.any),
+        if: PropTypes.bool
     };
 
     static defaultProps = {
@@ -37,7 +37,9 @@ export default class Modal extends React.Component {
     componentDidMount() {
         const {children} = this.props;
         const {addModal} = this.context;
-        addModal(this.asMap(this.props), children);
+        if (addModal) {
+            addModal(this.asMap(this.props), children);
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -47,14 +49,18 @@ export default class Modal extends React.Component {
     componentDidUpdate() {
         const {children} = this.props;
         const {updateBeacon} = this.context;
-        updateBeacon(this.asMap(this.props), children);
+        if (updateBeacon) {
+            updateBeacon(this.asMap(this.props), children);
+        }
     }
 
     componentWillUnmount() {
         const {removeModal} = this.context;
         const {id} = this.props;
 
-        removeModal(id);
+        if (removeModal) {
+            removeModal(id);
+        }
     }
 
     render() {
